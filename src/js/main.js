@@ -9,7 +9,7 @@ const get = () => {
             _limit: 5,
         }
     }
-
+    //get mothod
     axios.get('https://jsonplaceholder.typicode.com/posts', config)
         .then((response) => {
             renderOutput(response)
