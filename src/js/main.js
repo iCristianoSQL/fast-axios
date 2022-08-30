@@ -30,31 +30,95 @@ const post = () => {
 }
 
 const put = () => {
-    console.log('put');
+        const data = {
+        id: 1,
+        title: 'faa',
+        body: 'bar',
+        userId: 1,
+    }
+
+    axios.put('https://jsonplaceholder.typicode.com/posts/1', data)
+        .then((response) => {
+            renderOutput(response)
+        })
 }
 
 const patch = () => {
-    console.log('patch');
+        const data = {
+        title: 'LaraVue',
+    }
+
+        axios.put('https://jsonplaceholder.typicode.com/posts/1', data)
+        .then((response) => {
+            renderOutput(response)
+        })
 }
 
 const del = () => {
-    console.log('delete');
+        axios.delete('https://jsonplaceholder.typicode.com/posts/1')
+        .then((response) => {
+            renderOutput(response)
+        })
 }
 
 const multiple = () => {
-    console.log('multiple');
+        const config = {
+        params: {
+            _limit: 5,
+        }
+    }
+
+    Promise.all([
+        axios.get('https://jsonplaceholder.typicode.com/posts', config),
+        axios.get('https://jsonplaceholder.typicode.com/users', config)
+    ]).then((response) => {
+        console.log(response[0])
+        console.log(response[1])
+    })
 }
 
 const transform = () => {
-    console.log('transform');
+    const config = {
+        params: {
+            _limit: 5
+        },
+        transformResponse: [function (data) {
+            const payload = JSON.parse(data).map(o => {
+                return {
+                    ...o,
+                    first_name: 'Jon',
+                    last_name: 'Snow',
+                    full_name: 'Jon Snow',
+                }
+            });
+            return payload;
+        }],
+    };
+    axios.get('https://jsonplaceholder.typicode.com/posts', config)
+        .then((response) => renderOutput(response))
 }
 
 const errorHandling = () => {
-    console.log('errorHandling');
+    axios.get('https://jsonplaceholder.typicode.com/postsz')
+        .then((response) => renderOutput(response))
+        .catch((error) => renderOutput(error.response));
 }
 
 const cancel = () => {
-    console.log('cancel');
+    const controller = new AbortController();
+    const config = {
+        params: {
+            _limit: 5
+        },
+        signal: controller.signal
+    };
+    axios.get('https://jsonplaceholder.typicode.com/posts', config)
+        .then((response) => renderOutput(response))
+        .catch((e) => {
+            console.log(e.message);
+        })
+
+    controller.abort()
 }
 
 const clear = () => {
